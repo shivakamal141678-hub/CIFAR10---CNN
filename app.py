@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from PIL import Image
 from torchvision import transforms
+from huggingface_hub import hf_hub_download
 
 
 # -----------------------------
@@ -147,19 +148,24 @@ class cnn(nn.Module):
 # 3. Load trained model
 # -----------------------------
 
+from huggingface_hub import hf_hub_download
+
 model = cnn()
+
+model_path = hf_hub_download(
+    repo_id="Shivakamal/CIFAR-10",
+    filename="best2.cnn.pth"
+)
 
 model.load_state_dict(
     torch.load(
-        "best2.cnn.pth",
+        model_path,
         weights_only=True,
         map_location="cpu"
     )
 )
 
 model.eval()
-
-
 # -----------------------------
 # 4. CIFAR-10 classes
 # -----------------------------
@@ -186,7 +192,6 @@ transform = transforms.Compose([
     transforms.Resize((32, 32)),
     transforms.ToTensor()
 ])
-
 
 # -----------------------------
 # 6. Streamlit UI
