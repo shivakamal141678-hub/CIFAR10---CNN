@@ -1,0 +1,6 @@
+*.pth
+bibi/
+data/
+data3/
+__pycache__/
+*.pyc
