@@ -72,6 +72,21 @@ cifar10-cnn/
 ├── one_cat_dog_error.png
 └── .gitignore
 How to Run
+.can upload images which i have trained on yes and see result and how confident my model is
+the images i want you to upload and predict only which are below
+Airplane
+Automobile (cars, not trucks)
+Bird
+Cat
+Deer
+Dog
+Frog
+Horse
+Ship
+Truck (pickup trucks, large trucks)
+and link to check
+https://shivakamal141678-hub-cifar10---cnn-app-ugxt66.streamlit.app/
+.and code is on github
 git clone https://github.com/shivakamal141678-hub/CIFAR10---CNN.git
 cd CIFAR10---CNN
 python cifar.py
