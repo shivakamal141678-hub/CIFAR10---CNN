@@ -1,3 +1,4 @@
+#this is the paret where we gona load out trained and saved model and we couldd test it
 import torch
 import torch.nn as nn
 
@@ -65,6 +66,7 @@ test_dataset=datasets.CIFAR10(
     download=True,
     transform=transform
 )
+#our dataset hase only this type of images and also it coluld predict this thype of images because we only trained on these
 classes = [
     "airplane",
     "automobile",
@@ -77,10 +79,13 @@ classes = [
     "ship",
     "truck"
 ]
-image,label=test_dataset[10]
-image=image.unsqueeze(0)
+image,label=test_dataset[10]#now we taking an image on dataset where on index 10
+image=image.unsqueeze(0)#it adds a 1 at starting index of the particualr image of rgb is 1 in the begining on that image of rgb
+#it adds the dim which acts as batch_size so that cnn could process it
 with torch.no_grad():
+    
+    
     output=model(image)
     prediction=output.argmax(dim=1).item()
     print("Predicted:", classes[prediction])
-print("Actual:", classes[label])
+print("Actual:", classes[label])#final prediction as we choose in index according to image so that it predicts
