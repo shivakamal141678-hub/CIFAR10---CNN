@@ -150,7 +150,7 @@ model = cnn()
 print(model)
 
 
-#this is our data surgmentation
+#this is our data aurgmentation
 #this is where we make the pictures upside down and crom so that model could learn more complecated visuals
 
 transform = transforms.Compose([
@@ -158,11 +158,11 @@ transform = transforms.Compose([
     transforms.RandomCrop(32, padding=4), #it crops and which is 32features and padding is where it adds up a boundary of number to entire grid so that it could also make shure learning edges
     transforms.ToTensor()#it changes the image which we can see in to numbers because meachine cant see as we see so we transfom them in to numbers tensors
 ])
-
+#it transforms our pixeld imaes to tensors where model could understand it
 
 test_transform = transforms.ToTensor()
 
-
+#the dataset we taking is cifar10 saving downloading training
 train_dataset = datasets.CIFAR10(
     root="bibi",
     download=True,
@@ -170,20 +170,22 @@ train_dataset = datasets.CIFAR10(
     transform=transform
 )
 
-
+#its test dataset downloadis true  train is false because we are testing
 test_dataset = datasets.CIFAR10(
     root="bibi",
     download=True,
     train=False,
     transform=test_transform
 )
-
+#lets add loader so tat we could put batch_size and shuffle and size is 64 per batch 1 epoch mean it goes through whole data set respective to batch_size
+#we can imagin the math behind
 
 train_loader = DataLoader(
     train_dataset,
     batch_size=64,
     shuffle=True
 )
+#now lets test the loader
 
 
 test_loader = DataLoader(
@@ -193,73 +195,68 @@ test_loader = DataLoader(
 )
 
 
-# =========================
-# LOSS + OPTIMIZER
-# =========================
-
+#now lets add loss fn and optimizer
 loss_fn = nn.CrossEntropyLoss()
-
+#here we go optimizer with lr=0.001 and weight_deacy 
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=0.001,weight_decay=1e-4
 )
-#2nd learning sheduler
+#2nd learning sheduler it shedules the lr after 10 epochs so model could take small steps
 scheduler=torch.optim.lr_scheduler.StepLR(optimizer,step_size=10,gamma=0.5)
 
 
-# =========================
-# TRAINING
-# =========================
-#LETS ADD CNDITIO
-best_accuracy=0
+#now its time to train the model
+best_accuracy=0#where we start it as best acc as 0
+#totally 50 rounds where each round goes through whole datasst 1 so it repated for 50 epochs so that model could decrease in loss
 
 for epoch in range(50):  
+    #training model
 
     model.train()
-
+#runnin_loss is0
     running_loss = 0
 
     correct = 0
     total = 0
-
+#lets add for loop so that it could adjust weights and parameters
 
     for inputs, targets in train_loader:
+        #this is the step we are telling it to clear previous gradents
 
         optimizer.zero_grad()
+        #now lets give forward pass
 
         output = model(inputs)
-
+#now lets add loss fn to the output and targets
         loss = loss_fn(output, targets)
-
+#lets calcuate the gradents by using backprop 
         loss.backward()
-
+#lets add those calcuated gradents tithe model
         optimizer.step()
        
 
-
+#let it predict rrunning loss first as we gave before
         running_loss += loss.item()
-
+#lets check predicted output and armax dim 1 is were it gives the highes probability num or logits to us
         predicted = output.argmax(dim=1)
 
         total += targets.size(0)
-
+#lets check weather predicted is equal to targets
         correct += (predicted == targets).sum().item()
-
+#lets give name as train_acc and out of 100 let it see how many correct our model gets
 
     train_accuracy = 100 * correct / total
 
+#now its time for testing this is where we could understand that our model could perfom on unseen images
+    model.eval()#this tells the model that iam gonna test the model no weights adjusted no gradents
 
-    # =========================
-    # TESTING
-    # =========================
-
-    model.eval()
-
-    correct = 0
-    total = 0
-
+    correct = 0#correct as 0
+    total = 0 #total as 0
+#this is step were everything is stop and no gradents flow nothing to adjust
 
     with torch.no_grad():
+        #leyts fun for loop for it and check
 
         for inputs, targets in test_loader:
 
@@ -274,19 +271,23 @@ for epoch in range(50):
 
     test_accuracy = 100 * correct / total
 
-
+#lets print what we got
     print(
         "Epoch:", epoch + 1,
         "Loss:", running_loss / len(train_loader),
         "Train Accuracy:", train_accuracy,
         "Test Accuracy:", test_accuracy
     )
+    #also adding sheduler where after 10 it goes as per our shedule
     scheduler.step()
 #lets add condition in it
-if test_accuracy>best_accuracy:
+if test_accuracy>best_accuracy:#we are telling model if best is test to save the model 
+    #for example while training at any particular round model could get better we dont know so that at best acc model saves it and we can save those weights and biases  and a;so can load for fine tuning
+    
     best_accuracy=test_accuracy
-    torch.save(model.state_dict(),"best.cnn.pth")
-    print("model saved")
+    torch.save(model.state_dict(),"best.cnn.pth")#this is used to save the model which we have trained and also we could load it so our model no need to train it longer to use
+    
+    print("model saved")#finally print the model wfter all before executed so that the model is saved on a best acc and testa ass
 
 
 
