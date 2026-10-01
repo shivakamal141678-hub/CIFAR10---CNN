@@ -6,9 +6,7 @@ from torchvision import transforms
 from huggingface_hub import hf_hub_download
 
 
-# -----------------------------
-# 1. Residual Block
-# -----------------------------
+
 
 class ResidualBlock(nn.Module):
 
@@ -47,9 +45,7 @@ class ResidualBlock(nn.Module):
         return out
 
 
-# -----------------------------
-# 2. CNN Model
-# -----------------------------
+
 
 class cnn(nn.Module):
 
@@ -144,9 +140,6 @@ class cnn(nn.Module):
         return x
 
 
-# -----------------------------
-# 3. Load trained model
-# -----------------------------
 
 from huggingface_hub import hf_hub_download
 
@@ -184,18 +177,13 @@ classes = [
 ]
 
 
-# -----------------------------
-# 5. Image preprocessing
-# -----------------------------
+
 
 transform = transforms.Compose([
     transforms.Resize((32, 32)),
     transforms.ToTensor()
 ])
 
-# -----------------------------
-# 6. Streamlit UI
-# -----------------------------
 
 st.title("CIFAR-10 CNN Classifier")
 
@@ -209,9 +197,7 @@ uploaded_file = st.file_uploader(
 )
 
 
-# -----------------------------
-# 7. Prediction
-# -----------------------------
+
 
 if uploaded_file is not None:
 
